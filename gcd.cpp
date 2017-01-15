@@ -12,13 +12,7 @@ using namespace std;
 using ll = long long;
 using ld = long double;
 
-static int ca = 0, cb = 0;
-static int print = 0;
-
 ll safe_gcd(ll u,ll v) {
-	++ca;
-	if(print)
-		cout<<ca<<": "<<u<<","<<v<<endl;
 	if( v == 0 ) {
 		return u;
 	}
@@ -36,9 +30,6 @@ ll safe_gcd_it(ll u,ll v) {
 }
 
 ll optimized_gcd(ll u,ll v) {
-	++cb;
-	if(print)
-		std::cout<<cb<<": "<<u<<","<<v<<endl;
 	if( v == 0 ) {
 		return std::abs(u);
 	}
@@ -52,6 +43,12 @@ ll optimized_gcd(ll u,ll v) {
 }
 
 ll binary_gcd(ll u,ll v) {
+	if(!u)
+		return v;
+	if(!v)
+		return u;
+	if(u==v)
+		return u;
 	ll k{ 0 };
 	while( u % 2 == 0 && v % 2 == 0 )//Rule n. 1
 		u /= 2 , v /= 2, ++k;
@@ -74,7 +71,7 @@ std::vector<std::pair<ll,ll>> generate_data(const ll amount) {
 
 	random_device rd;
 	mt19937 gen(rd());
-	const ll big = numeric_limits<long double>::max();
+	const ll big = numeric_limits<ll>::max();
 	uniform_int_distribution<ll> dist(1,big);
 
 	for(auto& el:nums) {
@@ -83,6 +80,24 @@ std::vector<std::pair<ll,ll>> generate_data(const ll amount) {
 	}
 
 	return nums;
+}
+
+std::vector<std::pair<ll,ll>> generate_data_2(const ll amount) {
+	std::vector<std::pair<ll,ll>> res;
+	res.resize(amount);
+	std::vector<ll> nums;
+	nums.resize(amount*2);
+
+	iota(begin(nums),end(nums),0);
+
+	random_shuffle(begin(nums),end(nums));
+
+	for(ll i{0};i<amount;++i) {
+		res[i].first = nums[i * 2 + 0];
+		res[i].second = nums[i * 2 + 1];
+	}
+
+	return res;
 }
 
 ll bench(function<ll(ll,ll)> fnc,
@@ -97,7 +112,7 @@ ll bench(function<ll(ll,ll)> fnc,
 
 int main() {
 	cout<<"Generating data\n";
-	auto nums = generate_data(5000000);
+	auto nums = generate_data_2(5000000);
 
 	cout<<"Running benchmarks\n";
 	pair<string,ld> exec_time[] = {
