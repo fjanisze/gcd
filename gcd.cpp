@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <chrono>
 #include <functional>
-#include <array>
 #include <iomanip>
 using namespace std;
 
